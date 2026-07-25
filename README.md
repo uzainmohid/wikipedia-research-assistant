@@ -11,7 +11,6 @@ Ask the bot about any topic — a person, place, event, or concept — and it:
 2. Extracts the key information
 3. Replies in a clean, consistent format:
 
-```
 📍 [Topic Name]
 
 🔹 What: [one-sentence definition]
@@ -23,7 +22,6 @@ Ask the bot about any topic — a person, place, event, or concept — and it:
 ⭐ Why it matters: [one sentence on significance]
 
 🎉 Fun fact: [one surprising detail]
-```
 
 If a topic doesn't exist on Wikipedia or is too vague, it replies with a graceful fallback instead of guessing or breaking format.
 
@@ -49,15 +47,21 @@ The full prompt is saved in this repo's linked Gist: **https://gist.github.com/u
 
 - **Free-tier model availability:** the first free OpenRouter model hit a "no endpoints available" error due to privacy/guardrail settings; switched to Google AI Studio's free Gemini tier instead.
 - **Missing platform dependencies:** Hermes's optional Discord and Telegram support packages (`discord.py`, `python-telegram-bot`) weren't installed by default and needed to be added manually into Hermes's virtual environment.
-- **Discord guild messages not received:** hit a confirmed open bug in Hermes Agent ([issue #43070](https://github.com/NousResearch/hermes-agent)) where the bot receives DMs and slash commands but never regular server channel messages. Switched to Telegram, which doesn't have this issue.
-- **Formatting not applied in gateway mode:** `system_prompt` and `SOUL.md` worked correctly in the CLI but weren't consistently picked up by the Telegram gateway session. Fixed by adding a dedicated `platform_hints.telegram` override in `config.yaml`, and by starting a fresh session (`/new`) after each prompt change, since Hermes snapshots the system prompt at session start.
+- **Discord guild messages not received:** hit a confirmed open bug in Hermes Agent (issue #43070) where the bot receives DMs and slash commands but never regular server channel messages. Switched to Telegram, which doesn't have this issue.
+- **Formatting not applied in gateway mode:** `system_prompt` and `SOUL.md` worked correctly in the CLI but weren't consistently picked up by the Telegram gateway session. Fixed by adding a dedicated `platform_hints.telegram` override in `config.yaml`, and by starting a fresh session after each prompt change.
 
-## Example queries & screenshots
+## Screenshots
 
-Three screenshots are included in this submission:
+**History topic** — *"Tell me about the Great Wall of China"*
 
-1. **`test_and_fix_1.png`** — History topic: *"Tell me about the Great Wall of China"*, showing the full structured format (📍 What / Key Facts / Why it matters / Fun fact).
-2. **`works_as_expected_web_extract_and_search.png`** — Technology topic: *"Tell me about Bitcoin"*, showing the live Wikipedia search-and-fetch step followed by the formatted reply, plus a second history example (Great Wall) for consistency comparison.
-3. **`will_not_response_the_unrelated.png`** — Graceful fallback test: *"Tell me about the Roman Empire"* (correctly formatted history answer) followed by *"Tell me about my neighbor's cat"*, which correctly triggers the fallback message ("I couldn't find a clear Wikipedia article for that — could you be more specific?") instead of guessing or breaking format.
+![Great Wall of China example](history-great-wall.png)
+
+**Technology topic** — *"Tell me about Bitcoin"*, including the live Wikipedia search step
+
+![Bitcoin example](tech-bitcoin.png)
+
+**Graceful fallback** — *"Tell me about my neighbor's cat"* correctly triggers the fallback message instead of guessing
+
+![Fallback example](fallback-test.png)
 
 Additional topics tested during development (format held consistent across all): Photosynthesis, Artificial Intelligence, Eiffel Tower, Albert Einstein, Amazon Rainforest, World War II, Solar System.
